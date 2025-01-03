@@ -65,14 +65,19 @@ class XrayConfig(BaseConfig):
         else:
             configs = self._configs
 
-        json_template = json.loads(self._template)
+        json_template_str = self._template
         all_outbounds = []
 
         for data in configs:
             outbounds = self.create_outbounds(data)
+            for outbound in outbounds:
+                if outbound["tag"] != "\ud83c\uddf7\ud83c\uddfa Russia":
+                    json_template_str = json_template_str.replace("CHANGETHIS", outbound["tag"])
             all_outbounds.extend(outbounds)
 
+        json_template = json.loads(json_template_str)
         json_template["outbounds"].extend(all_outbounds)
+
         return json.dumps(json_template, indent=4)
 
     @staticmethod
