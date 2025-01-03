@@ -58,9 +58,9 @@ class XrayConfig(BaseConfig):
 
     def render(self, sort: bool = True, shuffle: bool = False):
         configs: List[V2Data] = []
-        if shuffle is True:
+        if shuffle:
             configs = random.sample(self._configs, len(self._configs))
-        elif sort is True:
+        elif sort:
             configs = sorted(self._configs, key=lambda config: config.weight)
         else:
             configs = self._configs
@@ -71,8 +71,9 @@ class XrayConfig(BaseConfig):
         for data in configs:
             outbounds = self.create_outbounds(data)
             for outbound in outbounds:
-                if outbound["tag"] != "\ud83c\uddf7\ud83c\uddfa Russia":
-                    json_template_str = json_template_str.replace("CHANGETHIS", outbound["tag"])
+                if outbound["tag"] == "🇷🇺 Russia":
+                    continue
+                json_template_str = json_template_str.replace("CHANGETHIS", outbound["tag"])
             all_outbounds.extend(outbounds)
 
         json_template = json.loads(json_template_str)
