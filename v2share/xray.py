@@ -65,19 +65,15 @@ class XrayConfig(BaseConfig):
         else:
             configs = self._configs
 
-        xray_configs = []
+        json_template = json.loads(self._template)
+        all_outbounds = []
+
         for data in configs:
             outbounds = self.create_outbounds(data)
-            json_template = json.loads(self._template)
-            complete_config = {
-                **json_template,
-                **{
-                    "remarks": data.remark,
-                    "outbounds": outbounds + json_template["outbounds"],
-                },
-            }
-            xray_configs.append(complete_config)
-        return json.dumps(xray_configs, indent=4)
+            all_outbounds.extend(outbounds)
+
+        json_template["outbounds"].extend(all_outbounds)
+        return json.dumps(json_template, indent=4)
 
     @staticmethod
     def create_outbounds(data: V2Data):
